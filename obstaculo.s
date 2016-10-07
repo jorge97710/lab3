@@ -8,9 +8,9 @@ matrizAlto: .word 50
 .global matrizAncho
 matrizAncho: .word 100
 
-.global matriz
+.global obs
 
-matriz:
+obs:
 
 
 
