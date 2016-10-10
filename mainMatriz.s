@@ -37,28 +37,31 @@ ldr r8,= ingreso
 	cmp r1,#2
 	beq c4
 		
-	fin: 
-	ldr r0,= adios
-		bl puts
+	seguir2:
 	bl sprite1s
+	bl ciclo
+	b fin
+	fin:
+	ldr r0,= adios
+	bl puts
 	mov r7,#1
 	swi 0
 	
 	c1:
-	bl sprite1s
+	bl pintarf
 	b seguir
 	c2:
 	bl pintarfd
 	b seguir 
 	c3:
 	bl pintarft
-	b fin
+	b seguir2
 	c4:
 	bl pintarfc
 	b fin
 	
 .data
-.global pixelAddr,adios,or
+.global pixelAddr,adios,or,oran
 pixelAddr: .word 0
 ingreso:			.word 0
 Bienvenida:			.asciz "Bienvenido ingrese\n" 
@@ -66,3 +69,4 @@ adios:			.asciz "Gracias por usar el programa"
 formato:			.asciz "%d"
 conta:				.word 0
 or: 				.word 300
+oran: 				.word  0

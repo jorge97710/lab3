@@ -124,11 +124,11 @@
 	.global pintarft
 	pintarft:
 	mov r9,lr
-	push {r9}
+	push {r9-r12}
 	bl getScreenAddr
 	ldr r1,=pixelAddr
 	str r0,[r1]
-	pop {r9}
+	pop {r9-r12}
 	renderss$:
 		x	  .req r1
 		y         .req r2
@@ -244,11 +244,11 @@
 .global sprite1s
 	sprite1s:
 	mov r9,lr
-	push {r9}
+	push {r9-r12}
 	bl getScreenAddr
 	ldr r1,=pixelAddr
 	str r0,[r1]
-	pop {r9}
+	pop {r9-r12}
 	rendersp$:
 		x	  .req r1
 		y         .req r2
@@ -308,11 +308,11 @@
 	.global obstaculos
 	obstaculos:
 	mov r9,lr
-	push {r9}
+	push {r9-r12}
 	bl getScreenAddr
 	ldr r1,=pixelAddr
 	str r0,[r1]
-	pop {r9}
+	pop {r9-r12}
 	renderob$:
 		
 		x	  .req r1
@@ -328,10 +328,16 @@
 		ldr ancho,[ancho]
 		ldr alto,=Altoobs
 		ldr alto,[alto]
-		mov y,#0
+		ldr r10,=or
+		ldr r10,[r10]
+		add alto,r10
+		mov y,r10
+		ldr r10,=oran
+		ldr r10,[r10]
+		add ancho,r10
 		//Ciclo que dibuja filas
 		drawRowob$:
-			mov x,#0
+			mov x,r10
 			drawPixelob$:
 				cmp x,ancho				//comparar x con el ancho de la imagen
 				bge endob
@@ -365,5 +371,22 @@
 	
 	mov pc,r9
 	
-	
+	.global ciclo
+	ciclo:
+	mov r12,lr
+	mov r11,#300
+	loop:
+	cmp r11,#0
+	ble final
+	bl pintarft
+	bl sprite1s
+	ldr r10,= oran
+	str r11,[r10]
+	bl obstaculos
+	sub r11,#10
+	b loop
+	final:
+	bl pintarft
+	bl sprite1s
+	mov pc,r12
 	
