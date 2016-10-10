@@ -2,11 +2,11 @@
 .data
 .align 2
 
-.global matrizAlto
-matrizAlto: .word 50
+.global Altoobs
+Altoobs: .word 50
 
-.global matrizAncho
-matrizAncho: .word 100
+.global Anchoobs
+Anchoobs: .word 100
 
 .global obs
 

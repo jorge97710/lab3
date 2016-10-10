@@ -40,12 +40,12 @@ ldr r8,= ingreso
 	fin: 
 	ldr r0,= adios
 		bl puts
-	@@ Aqui seguiria el juego	
+	bl sprite1s
 	mov r7,#1
 	swi 0
 	
 	c1:
-	bl pintarf
+	bl sprite1s
 	b seguir
 	c2:
 	bl pintarfd
@@ -58,10 +58,11 @@ ldr r8,= ingreso
 	b fin
 	
 .data
-.global pixelAddr,adios
+.global pixelAddr,adios,or
 pixelAddr: .word 0
 ingreso:			.word 0
 Bienvenida:			.asciz "Bienvenido ingrese\n" 
 adios:			.asciz "Gracias por usar el programa" 
 formato:			.asciz "%d"
 conta:				.word 0
+or: 				.word 300
