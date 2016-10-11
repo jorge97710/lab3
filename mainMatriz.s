@@ -39,8 +39,17 @@ ldr r8,= ingreso
 		
 	seguir2:
 	bl sprite1s
+	mov r0,#0
+	loopi:
+	cmp r0,#5
+	beq fin
+	@ciclo para ibujar varios obstaculos
+	push {r0}
 	bl ciclo
-	b fin
+	pop {r0}
+	add r0,#1
+	b loopi
+	
 	fin:
 	ldr r0,= adios
 	bl puts
@@ -61,7 +70,7 @@ ldr r8,= ingreso
 	b fin
 	
 .data
-.global pixelAddr,adios,or,oran
+.global pixelAddr,adios,or,oran,orr
 pixelAddr: .word 0
 ingreso:			.word 0
 Bienvenida:			.asciz "Bienvenido ingrese\n" 
@@ -69,4 +78,5 @@ adios:			.asciz "Gracias por usar el programa"
 formato:			.asciz "%d"
 conta:				.word 0
 or: 				.word 300
+orr: 				.word 300
 oran: 				.word  0

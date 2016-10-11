@@ -266,7 +266,7 @@
 		ldr r10,=or
 		ldr r10,[r10]
 		add alto,r10
-		mov y,#300
+		mov y,r10
 		//Ciclo que dibuja filas
 		drawRowsp$:
 			mov x,#0
@@ -328,7 +328,7 @@
 		ldr ancho,[ancho]
 		ldr alto,=Altoobs
 		ldr alto,[alto]
-		ldr r10,=or
+		ldr r10,=orr
 		ldr r10,[r10]
 		add alto,r10
 		mov y,r10
@@ -374,19 +374,132 @@
 	.global ciclo
 	ciclo:
 	mov r12,lr
-	mov r11,#300
+	mov r11,#500
+	mov r9,#300
+	ldr r10,= or
+	str r9,[r10]
 	loop:
+	bl wait
 	cmp r11,#0
-	ble final
+	beq final
+	cmp r11,#75
+	beq cumple
+	cont:
 	bl pintarft
-	bl sprite1s
+	bl 	sprite1s
 	ldr r10,= oran
 	str r11,[r10]
 	bl obstaculos
-	sub r11,#10
+	sub r11,#25
+	
 	b loop
 	final:
 	bl pintarft
 	bl sprite1s
 	mov pc,r12
 	
+	cumple:
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#250
+	ldr r10,= or
+	str r9,[r10]
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#200
+	ldr r10,= or
+	str r9,[r10]	
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#150
+	ldr r10,= or
+	str r9,[r10]
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#100
+	ldr r10,= or
+	str r9,[r10]
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#150
+	ldr r10,= or
+	str r9,[r10]
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#200
+	ldr r10,= or
+	str r9,[r10]	
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#250
+	ldr r10,= or
+	str r9,[r10]
+	bl wait
+	bl sprite1s
+	
+	bl wait
+	bl pintarft
+	bl obstaculos
+	mov r9,#300
+	ldr r10,= or
+	str r9,[r10]
+	bl wait
+	bl sprite1s
+	
+	mov r9,#300
+	ldr r10,= or
+	str r9,[r10]
+	b cont
+	
+	delay:
+ mov r7,#0
+	@tomamos nuestra base de 150000*2*ingresado entonces 300000 seria para que tarde 0.001 segundos. lo hice asi por conveniencia. luego se multiplica por lo ingresado para que tarde esa cantidad de milisegundos
+	ldr r1,=delaynum
+	ldr r1,[r1]
+	mov r3,#2
+	mul r0,r3
+	mul r0,r1
+    b compare
+loop1:
+    add r7,#1     //r7++
+compare:
+    cmp r7,r0     //test r7 == r0
+    bne loop1
+
+   mov pc,lr
+   
+   wait:
+	ldr r0,=207108864 @ big number
+sleepLoop:
+	subs r0,#1
+	bne sleepLoop @ loop delay
+	mov pc,lr
+.data
+.align 2
+delaynum:.word 1500
+
