@@ -381,7 +381,7 @@
 	loop:
 	bl wait
 	cmp r11,#0
-	beq final
+	ble final
 	cmp r11,#75
 	beq cumple
 	cont:
@@ -394,8 +394,8 @@
 	
 	b loop
 	final:
-	bl pintarft
-	bl sprite1s
+	b cumple2
+	fi:
 	mov pc,r12
 	
 	cumple:
@@ -419,7 +419,10 @@
 	
 	bl wait
 	bl pintarft
+	ldr r10,= oran
+	str r11,[r10]
 	bl obstaculos
+	sub r11,#30
 	mov r9,#150
 	ldr r10,= or
 	str r9,[r10]
@@ -428,16 +431,23 @@
 	
 	bl wait
 	bl pintarft
+	ldr r10,= oran
+	str r11,[r10]
 	bl obstaculos
+	sub r11,#30
 	mov r9,#100
 	ldr r10,= or
 	str r9,[r10]
 	bl wait
 	bl sprite1s
+
+	b cont
+	
+	cumple2:
 	
 	bl wait
 	bl pintarft
-	bl obstaculos
+	@bl obstaculos
 	mov r9,#150
 	ldr r10,= or
 	str r9,[r10]
@@ -446,7 +456,7 @@
 	
 	bl wait
 	bl pintarft
-	bl obstaculos
+	@bl obstaculos
 	mov r9,#200
 	ldr r10,= or
 	str r9,[r10]	
@@ -455,7 +465,7 @@
 	
 	bl wait
 	bl pintarft
-	bl obstaculos
+	@bl obstaculos
 	mov r9,#250
 	ldr r10,= or
 	str r9,[r10]
@@ -464,7 +474,7 @@
 	
 	bl wait
 	bl pintarft
-	bl obstaculos
+	@bl obstaculos
 	mov r9,#300
 	ldr r10,= or
 	str r9,[r10]
@@ -474,8 +484,7 @@
 	mov r9,#300
 	ldr r10,= or
 	str r9,[r10]
-	b cont
-	
+	b fi
 	delay:
  mov r7,#0
 	@tomamos nuestra base de 150000*2*ingresado entonces 300000 seria para que tarde 0.001 segundos. lo hice asi por conveniencia. luego se multiplica por lo ingresado para que tarde esa cantidad de milisegundos
