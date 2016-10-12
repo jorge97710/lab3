@@ -500,6 +500,21 @@
 	str r9,[r10]
 	loop:
 	bl wait
+	@GPIO para lectura puerto 17 @@agregue esto
+	@SUBIR
+	mov r0,#17
+	mov r1,#0
+	bl SetGpioFunction @hasta aqui
+	@@luego se ve si se apacho 
+	bl GetGpioAddress @solo se llama una vez CREO QUE HABRIA QUE PONERLO EN EL MAIN
+	mov r0,#17 @@puerto 17
+	bl GetGpio @@revisa
+	cmp r0,#0 @@compara
+	cmpne r11,#75 @@si se apacho, comprara r11 con 75
+	beq cumple @@si cumple salta
+	@@si no, pierde bne pierde
+	bl elwait	
+	@@hasta aqui
 	cmp r11,#0
 	ble final
 	cmp r11,#75
@@ -741,7 +756,17 @@ sleepLoop2:
 	subs r0,#1
 	bne sleepLoop2 @ loop delay
 	mov pc,lr
+	
+elwait:
+	mov r0, #0x4000000 @ big number
+elsleepLoop:
+	subs r0,#1
+	bne elsleepLoop @ loop delay
+	mov pc,lr
+
 .data
 .align 2
+.global myloc
+myloc: .word 0
 delaynum:.word 1500
 
