@@ -42,13 +42,34 @@ ldr r8,= ingreso
 	mov r0,#0
 	loopi:
 	cmp r0,#5
-	beq fin
+	beq n2
 	@ciclo para ibujar varios obstaculos
 	push {r0}
 	bl ciclo
 	pop {r0}
 	add r0,#1
 	b loopi
+	
+	seguir3:
+	bl sprite1s
+	mov r0,#0
+	loopii:
+	cmp r0,#5
+	beq fin
+	@ciclo para ibujar varios obstaculos
+	push {r0}
+	bl ciclo2
+	pop {r0}
+	add r0,#1
+	b loopii
+	
+	n2:
+	
+	bl nivel2s
+	bl wait
+	bl pintarft
+	bl wait
+	b  seguir3
 	
 	fin:
 	ldr r0,= adios
