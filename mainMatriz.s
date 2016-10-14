@@ -84,8 +84,7 @@ ldr r8,= ingreso
 	b  seguir3
 	
 	fin:
-	ldr r0,= adios
-	bl puts
+	bl pintargan
 	mov r7,#1
 	swi 0
 	

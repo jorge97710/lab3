@@ -3,7 +3,6 @@
 .align 2
 
 
-
 .global pintarfd
 	pintarfd:
 	mov r9,lr
@@ -618,6 +617,65 @@
 	.unreq	alto	
 	
 	mov pc,r9
+@-------------------------------------------------------------------------	
+	.global pintargan
+	pintargan:
+	mov r9,lr
+	push {r9}
+	bl getScreenAddr
+	ldr r1,=pixelAddr
+	str r0,[r1]
+	pop {r9}
+	rendergan$:
+		x	  .req r1
+		y         .req r2
+		colour 	  .req r3
+		addrPixel .req r5
+		countByte .req r6
+		ancho	  .req r7
+		alto	  .req r8
+
+		mov countByte,#0 				//Contador que cuenta la cantidad de bytes dibujados
+		ldr ancho,=widthgan
+		ldr ancho,[ancho]
+		ldr alto,=heightgan
+		ldr alto,[alto]
+		mov y,#0
+		//Ciclo que dibuja filas
+		drawRowgan$:
+			mov x,#0
+			drawPixelgan$:
+				cmp x,ancho				//comparar x con el ancho de la imagen
+				bge endgan
+				ldr addrPixel,=gan	//Obtenemos la direccion de la matriz con los colores
+				ldrb colour,[addrPixel,countByte]	//Leer el dato de la matriz.
+				
+				ldr r0,=pixelAddr
+				ldr r0,[r0] 
+				push {r0-r12}
+				bl pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
+				pop {r0-r12}
+				add countByte,#1 		//Incrementamos los bytes dibujados
+				add x,#1 				//Aumenta el contador del ancho de la imagen
+			
+				b drawPixelgan$
+		endgan:	
+			// aumentamos y
+			add y,#1
+						
+			//Revisamos si ya dibujamos toda la imagen.
+			teq y,alto
+			bne drawRowgan$
+
+	.unreq x		  
+	.unreq	y         
+	.unreq	colour 	  
+	.unreq	addrPixel 
+	.unreq	countByte 
+	.unreq	ancho	  
+	.unreq	alto	
+	
+	mov pc,r9	
 	
 	.global ciclo
 	ciclo:
