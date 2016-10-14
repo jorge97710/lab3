@@ -110,7 +110,7 @@ ldr r8,= ingreso
 		bl puts
 		b fin
 .data
-.global pixelAddr,adios,or,oran,orr,myloc
+.global pixelAddr,adios,or,oran,orr,myloc,an,al
 myloc: .word 0
 pixelAddr: .word 0
 ingreso:			.word 0
@@ -122,4 +122,5 @@ conta:				.word 0
 or: 				.word 300
 orr: 				.word 300
 oran: 				.word  0
-an:					.word  75
+an:					.word  55
+al:					.word  270

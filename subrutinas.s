@@ -426,7 +426,7 @@
 	
 @@---------------------------------------------------------
 .global pintarexpo
-	sprite1s:
+	pintarexpo:
 	mov r9,lr
 	push {r9-r12}
 	bl getScreenAddr
@@ -450,13 +450,13 @@
 		add ancho,r10
 		ldr alto,=heightexpo
 		ldr alto,[alto]
-		ldr r10,=orr
+		ldr r10,=al
 		ldr r10,[r10]
 		add alto,r10
 		mov y,r10
 		//Ciclo que dibuja filas
 		drawRowex$:
-			mov x,#75
+			mov x,#55
 			drawPixelex$:
 				cmp x,ancho				//comparar x con el ancho de la imagen
 				bge endex
@@ -466,7 +466,8 @@
 				ldr r0,=pixelAddr
 				ldr r0,[r0] 
 				push {r0-r12}
-				bl pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
+				cmp colour,#255
+				blne pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
 				pop {r0-r12}
 				add countByte,#1 		//Incrementamos los bytes dibujados
 				add x,#1 				//Aumenta el contador del ancho de la imagen
@@ -558,6 +559,66 @@
 	
 	mov pc,r9
 	
+@-------------------------------------------------------------------------	
+	.global pintarper
+	pintarper:
+	mov r9,lr
+	push {r9}
+	bl getScreenAddr
+	ldr r1,=pixelAddr
+	str r0,[r1]
+	pop {r9}
+	renderper$:
+		x	  .req r1
+		y         .req r2
+		colour 	  .req r3
+		addrPixel .req r5
+		countByte .req r6
+		ancho	  .req r7
+		alto	  .req r8
+
+		mov countByte,#0 				//Contador que cuenta la cantidad de bytes dibujados
+		ldr ancho,=widthper
+		ldr ancho,[ancho]
+		ldr alto,=heightper
+		ldr alto,[alto]
+		mov y,#0
+		//Ciclo que dibuja filas
+		drawRowper$:
+			mov x,#0
+			drawPixelper$:
+				cmp x,ancho				//comparar x con el ancho de la imagen
+				bge endper
+				ldr addrPixel,=per	//Obtenemos la direccion de la matriz con los colores
+				ldrb colour,[addrPixel,countByte]	//Leer el dato de la matriz.
+				
+				ldr r0,=pixelAddr
+				ldr r0,[r0] 
+				push {r0-r12}
+				bl pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
+				pop {r0-r12}
+				add countByte,#1 		//Incrementamos los bytes dibujados
+				add x,#1 				//Aumenta el contador del ancho de la imagen
+			
+				b drawPixelper$
+		endper:	
+			// aumentamos y
+			add y,#1
+						
+			//Revisamos si ya dibujamos toda la imagen.
+			teq y,alto
+			bne drawRowper$
+
+	.unreq x		  
+	.unreq	y         
+	.unreq	colour 	  
+	.unreq	addrPixel 
+	.unreq	countByte 
+	.unreq	ancho	  
+	.unreq	alto	
+	
+	mov pc,r9
+	
 	.global ciclo
 	ciclo:
 	mov r12,lr
@@ -576,6 +637,8 @@
 	cmp r0,#1 @@compara
 	cmpeq r11,#75
 	beq cumple
+	cmpne r11,#75
+	blt gg
 	cont:
 	bl pintarft
 	bl 	sprite1s
@@ -677,26 +740,35 @@
 	ldr r10,= or
 	str r9,[r10]
 	b fi
-	
+	gg:
+	bl pintarft
+	bl wait
+	bl pintarexpo
+	bl wait
+	bl pintarper
+	mov pc,r12
 @--------
 .global ciclo2
 	ciclo2:
 	mov r12,lr
-	ldr r11,=#525
+	ldr r10,=#525
+	mov r11,r10
 	mov r9,#300
 	ldr r10,= or
 	str r9,[r10]
-	loop2:
 	
-	cmp r11,#0
-	ble final2
+	loop2:
+	@cmp r11,#0
+	@ble final2
 	push {r1-r12}
 	mov r0,#13 @@puerto 17
 	bl GetGpio @@revisa
 	pop {r1-r12}
 	cmp r0,#1 @@compara
 	cmpeq r11,#75
-	beq cumplen
+	beq cumple2
+	cmpne r11,#75
+	blt gg2
 	cont2:
 	bl wait2
 	bl pintarft
@@ -800,6 +872,13 @@
 	str r9,[r10]
 	b fi2	
 	
+	gg2:
+	bl pintarft
+	bl wait
+	bl pintarexpo
+	bl wait
+	bl pintarper
+	mov pc,r12
 
 @wait
 .global wait   
