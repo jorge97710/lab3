@@ -37,8 +37,8 @@ int getScreenAddr(){
   if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo)) {
     printf("Error reading variable information.\n");
   }
-  printf("%dx%d,%d bits per pixel\n", vinfo.xres, vinfo.yres, vinfo.bits_per_pixel );
-
+  //printf("%dx%d,%d bits per pixel\n", vinfo.xres, vinfo.yres, vinfo.bits_per_pixel );
+	printf ("JUGANDO...\n");
   xRes = vinfo.xres;
   yRes = vinfo.yres;
 

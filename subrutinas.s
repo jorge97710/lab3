@@ -1,8 +1,27 @@
+/* ********************************************************************************************************************************** 
+   subrutinas.s
 
+   Se encarga de:		Pintar fondos
+						Pintar personaje y movimiento
+						Pintar obstaculos en movimiento
+
+      @authors: 
+   			Carlos Calderon ,Carne: 15219
+   			Jorge Azmitia ,Carne: 15202
+
+   Taller de Assembler
+   Universidad del Valle de Guatemala
+
+   Laboratorio3
+   ******************************************************************************************************************************* */
+/*--CODIGO *************************************************************************************************************************/
 .data
 .align 2
 
+/************************************************************************************************************* */
 
+/*-- pintarfd:		IMPRIME EL MENU DEL CURSOS EN CREDITOS *******************************/
+/*-- @param: NO HAY*/
 .global pintarfd
 	pintarfd:
 	mov r9,lr
@@ -62,6 +81,8 @@
 	
 	mov pc,r9
 
+/*-- nivel2s:		IMPRIME EL MENSAJE CORRESPONDIENTE A LLEGAR AL SEGUNDO NIVEL *******************************/
+/*-- @param: NO HAY*/
 .global nivel2s
 	nivel2s:
 	mov r9,lr
@@ -120,67 +141,9 @@
 	.unreq	alto	
 	
 	mov pc,r9
-@----
-.global nivel3s
-	nivel3s:
-	mov r9,lr
-	push {r9}
-	bl getScreenAddr
-	ldr r1,=pixelAddr
-	str r0,[r1]
-	pop {r9}
-	rendersn3$:
-		x	  .req r1
-		y         .req r2
-		colour 	  .req r3
-		addrPixel .req r5
-		countByte .req r6
-		ancho	  .req r7
-		alto	  .req r8
 
-		mov countByte,#0 				//Contador que cuenta la cantidad de bytes dibujados
-		ldr ancho,=widthprueb
-		ldr ancho,[ancho]
-		ldr alto,=heightprueb
-		ldr alto,[alto]
-		mov y,#0
-		//Ciclo que dibuja filas
-		drawRowsn3$:
-			mov x,#0
-			drawPixelsn3$:
-				cmp x,ancho				//comparar x con el ancho de la imagen
-				bge endsn3
-				ldr addrPixel,=nivel3	//Obtenemos la direccion de la matriz con los colores
-				ldrb colour,[addrPixel,countByte]	//Leer el dato de la matriz.
-				
-				ldr r0,=pixelAddr
-				ldr r0,[r0] 
-				push {r0-r12}
-				bl pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
-				pop {r0-r12}
-				add countByte,#1 		//Incrementamos los bytes dibujados
-				add x,#1 				//Aumenta el contador del ancho de la imagen
-			
-				b drawPixelsn3$
-		endsn3:	
-			// aumentamos y
-			add y,#1
-						
-			//Revisamos si ya dibujamos toda la imagen.
-			teq y,alto
-			bne drawRowsn3$
-
-	.unreq x		  
-	.unreq	y         
-	.unreq	colour 	  
-	.unreq	addrPixel 
-	.unreq	countByte 
-	.unreq	ancho	  
-	.unreq	alto	
-	
-	mov pc,r9
-	
-@--	
+/*-- pintarf:		IMPRIME EL MENU EN EL CURSOR JUGAR *******************************/
+/*-- @param: NO HAY*/
 .global pintarf
 	pintarf:
 	mov r9,lr
@@ -240,7 +203,9 @@
 	.unreq	alto
 	
 	mov pc,r9
-	
+
+/*-- pintarft:		FONDO DEL JUEGO *******************************/
+/*-- @param: NO HAY*/
 	.global pintarft
 	pintarft:
 	mov r9,lr
@@ -300,7 +265,8 @@
 	
 	mov pc,r9
 	
-		
+/*-- pintarfc:		CREDITOS DEL JUEGO *******************************/
+/*-- @param: NO HAY*/
 	.global pintarfc
 	pintarfc:
 	mov r9,lr
@@ -360,7 +326,8 @@
 	
 	mov pc,r9
 	
-	
+/*-- sprite1s:		PERSONAJE PRINCIPAL *******************************/
+/*-- @param: NO HAY*/
 .global sprite1s
 	sprite1s:
 	mov r9,lr
@@ -423,7 +390,8 @@
 	
 	mov pc,r9
 	
-@@---------------------------------------------------------
+/*-- pintarexpo:		COLISION*******************************/
+/*-- @param: NO HAY*/
 .global pintarexpo
 	pintarexpo:
 	mov r9,lr
@@ -465,7 +433,7 @@
 				ldr r0,=pixelAddr
 				ldr r0,[r0] 
 				push {r0-r12}
-				cmp colour,#255
+				cmp colour,#255			// PARA FONDO TRANSPARENTE
 				blne pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
 				pop {r0-r12}
 				add countByte,#1 		//Incrementamos los bytes dibujados
@@ -490,7 +458,8 @@
 	
 	mov pc,r9
 	
-	@@obs
+	/*-- obstaculos:	PINTAR	OBSTACULOS *******************************/
+/*-- @param: NO HAY*/
 	.global obstaculos
 	obstaculos:
 	mov r9,lr
@@ -533,7 +502,7 @@
 				ldr r0,=pixelAddr
 				ldr r0,[r0] 
 				push {r0-r12}
-				cmp colour,#255
+				cmp colour,#255			// PARA FONDO TRANSPARENTE	
 				blne pixel				//Dibujamos el pixel. r1=x,r2=y,r3=colour
 				pop {r0-r12}
 				add countByte,#1 		//Incrementamos los bytes dibujados
@@ -558,7 +527,8 @@
 	
 	mov pc,r9
 	
-@-------------------------------------------------------------------------	
+/*-- pintarper:	 DESPLEGAR QUE PERDIO *******************************/
+/*-- @param: NO HAY*/	
 	.global pintarper
 	pintarper:
 	mov r9,lr
@@ -617,7 +587,10 @@
 	.unreq	alto	
 	
 	mov pc,r9
-@-------------------------------------------------------------------------	
+
+		
+/*-- pintarper:	 DESPLEGAR QUE GANO *******************************/
+/*-- @param: NO HAY*/	
 	.global pintargan
 	pintargan:
 	mov r9,lr
@@ -677,17 +650,22 @@
 	
 	mov pc,r9	
 	
+/*-- ciclo:	 MOVIMIENTO DEL OBSTACULO*******************************/
+/*-- @param: NO HAY*/	
 	.global ciclo
 	ciclo:
 	mov r12,lr
+	/* Posiciones iniciales */
 	mov r11,#500
 	mov r9,#300
 	ldr r10,= or
 	str r9,[r10]
+	/* Ciclo para mover */
 	loop:
 	bl wait
 	cmp r11,#0
 	ble final	
+	/* Revisa si el boton se ha presionao */
 	push {r1-r12}
 	mov r0,#13 @@puerto 17
 	bl GetGpio @@revisa
@@ -805,7 +783,9 @@
 	bl wait
 	bl pintarper
 	mov pc,r12
-@--------
+	
+/*-- ciclo2:	 MOVIMIENTO DEL OBSTACULO NIVEL 2*******************************/
+/*-- @param: NO HAY*/	
 .global ciclo2
 	ciclo2:
 	mov r12,lr
@@ -814,10 +794,9 @@
 	mov r9,#300
 	ldr r10,= or
 	str r9,[r10]
-	
+	/* Ciclo para mover */
 	loop2:
-	@cmp r11,#0
-	@ble final2
+	/* Revisa si el boton se ha presionao */
 	push {r1-r12}
 	mov r0,#13 @@puerto 17
 	bl GetGpio @@revisa
@@ -938,7 +917,8 @@
 	bl pintarper
 	mov pc,r12
 
-@wait
+/*-- wait:	 HACE UN  DELAY*******************************/
+/*-- @param: NO HAY*/	
 .global wait   
    wait:
 	ldr r0,=477108864 @ big number
@@ -947,7 +927,8 @@ sleepLoop:
 	bne sleepLoop @ loop delay
 	mov pc,lr
 	
-@wait2
+/*-- wait2:	 HACE UN  DELAY*******************************/
+/*-- @param: NO HAY*/
 .global wait2   
    wait2:
 	ldr r0,=160108864 @ big number
@@ -955,16 +936,18 @@ sleepLoop2:
 	subs r0,#1
 	bne sleepLoop2 @ loop delay
 	mov pc,lr
+/*-- wait:	 HACE UN  DELAY*******************************/
+/*-- @param: NO HAY*/
 .global elwait
-@elwait
 elwait:
 	mov r0, #0x4000000 @ big number
 elsleepLoop:
 	subs r0,#1
 	bne elsleepLoop @ loop delay
 	mov pc,lr
-@------------------------------------------------------------------------------
 
+
+/*--*****************************************************SUBRUTINAS PARA EL BOTON********************************************************************/
 /* NEW
 * GetGpioAddress returns the base address of the GPIO region as a physical address
 * in register r0.
@@ -1094,8 +1077,9 @@ GetGpio:
 
 	pop {r5-r8}
 	pop {pc}
-	
+/*--CODIGO *************************************************************************************************************************/
+/*--DATOS **************************************************************************************************************************/
 .data
 .align 2
 delaynum:.word 1500
-
+/*--DATOS **************************************************************************************************************************/
