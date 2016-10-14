@@ -8,9 +8,21 @@
  .align 2
  .global main
 main:
+	bl GetGpioAddress @solo se llama una vez CREO QUE HABRIA QUE PONERLO EN EL MAIN
+	@SUBIR
+	mov r0,#13
+	mov r1,#0
+	bl SetGpioFunction
+	
+	@SUBIR
+	mov r0,#17
+	mov r1,#0
+	bl SetGpioFunction
 	#-------------------------
 	#get screen address
 	#-------------------------
+
+	
 	
 	ldr r0,= Bienvenida
 		bl printf
@@ -64,7 +76,7 @@ ldr r8,= ingreso
 	b loopii
 	
 	n2:
-	
+	bl wait
 	bl nivel2s
 	bl wait
 	bl pintarft
@@ -89,15 +101,25 @@ ldr r8,= ingreso
 	c4:
 	bl pintarfc
 	b fin
-	
+	mk:
+		ldr r0,= Bienvenida
+		bl puts
+		b fin
+	mk2:
+		ldr r0,= Bienvenida2
+		bl puts
+		b fin
 .data
-.global pixelAddr,adios,or,oran,orr
+.global pixelAddr,adios,or,oran,orr,myloc
+myloc: .word 0
 pixelAddr: .word 0
 ingreso:			.word 0
 Bienvenida:			.asciz "Bienvenido ingrese\n" 
+Bienvenida2:			.asciz "Bienvenido2 ingrese\n" 
 adios:			.asciz "Gracias por usar el programa" 
 formato:			.asciz "%d"
 conta:				.word 0
 or: 				.word 300
 orr: 				.word 300
 oran: 				.word  0
+an:					.word  75
